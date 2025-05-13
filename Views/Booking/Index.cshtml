@@ -1,0 +1,84 @@
+﻿@model IEnumerable<EventEase.Models.Booking>
+
+@{
+    ViewData["Title"] = "Event Ease - Booking";
+}
+
+<h1>Bookings - Event Ease</h1>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+
+<!-- Search Form -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5>Search Bookings</h5>
+    </div>
+    <div class="card-body">
+        <form asp-action="Search" method="get">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="searchTerm">Search Term</label>
+                    <input type="text" id="searchTerm" name="searchTerm" class="form-control" value="@ViewData["SearchTerm"]?.ToString()" />
+                </div>
+                <div class="col-md-2">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="startDate" name="startDate" class="form-control" value="@ViewData["StartDate"]?.ToString()" />
+                </div>
+                <div class="col-md-2">
+                    <label for="endDate">End Date</label>
+                    <input type="date" id="endDate" name="endDate" class="form-control" value="@ViewData["EndDate"]?.ToString()" />
+                </div>
+                <div class="col-md-3">
+                    <label for="venueId">Venue</label>
+                    <select id="venueId" name="venueId" class="form-control" asp-items="ViewBag.VenueId">
+                        <option value="">-- All Venues --</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary mr-2">Search</button>
+                    <a asp-action="Index" class="btn btn-secondary">Reset</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Booking Table -->
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.First().Event.EventName)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Venue.VenueName)</th>
+            <th>@Html.DisplayNameFor(model => model.First().BookingDate)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Event?.EventName</td>
+                <td>@item.Venue?.VenueName</td>
+                <td>@item.BookingDate.ToString("MMMM dd, yyyy")</td>
+                <td>
+                    <div class="btn-group">
+                        <a asp-action="Details" asp-route-id="@item.BookingId" class="btn btn-sm btn-info">Details</a>
+                        <a asp-action="Edit" asp-route-id="@item.BookingId" class="btn btn-sm btn-warning">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.BookingId" class="btn btn-sm btn-danger">Delete</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
